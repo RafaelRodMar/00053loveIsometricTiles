@@ -119,9 +119,10 @@ function love.draw()
 
     -- (0,0) is at top, defined by vOrigin, so draw from top to bottom
     -- to ensure tiles closest to camera are drawn last
-    for y = 0, vWorldSize.y do
-        for x = 0, vWorldSize.x do
+    for y = 1, vWorldSize.y do
+        for x = 1, vWorldSize.x do
             -- Convert cell coordinate to world space
+            print(x..","..y)
             vWorld = ToScreen(x, y)
             
             local tileValue = pWorld[y * vWorldSize.x + x]
