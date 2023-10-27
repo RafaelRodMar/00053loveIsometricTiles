@@ -29,7 +29,7 @@ function love.load()
 
     -- Fill the empty table with vWorldSize.x * vWorldSize.y zeroes
     for i = 1, vWorldSize.x * vWorldSize.y do
-        pWorld[i] = 0
+        pWorld[i] = 1
     end
 
     -- mouse
@@ -57,10 +57,10 @@ end
 function love.update(dt)
     
     -- Work out active cell
-    vCell = { x = vMouse.x / vTileSize.x, y = vMouse.y / vTileSize.y }
+    vCell = { x = math.floor(vMouse.x / vTileSize.x), y = math.floor(vMouse.y / vTileSize.y) }
 
     -- Work out mouse offset into cell
-    vOffset = { x = vMouse.x % vTileSize.x, y = vMouse.y % vTileSize.y }
+    vOffset = { x = math.floor(vMouse.x % vTileSize.x), y = math.floor(vMouse.y % vTileSize.y) }
 
     -- Sample into cell offset colour
     colr, colg, colb = imagedata:getPixel(3 * vTileSize.x + vOffset.x, vOffset.y)
@@ -103,8 +103,8 @@ function love.update(dt)
     -- Function to convert "world" coordinate into screen space
     function ToScreen(x, y)
         return {
-            (vOrigin.x * vTileSize.x) + (x - y) * (vTileSize.x / 2),
-            (vOrigin.y * vTileSize.y) + (x + y) * (vTileSize.y / 2)
+            math.floor((vOrigin.x * vTileSize.x) + (x - y) * (vTileSize.x / 2)),
+            math.floor((vOrigin.y * vTileSize.y) + (x + y) * (vTileSize.y / 2))
         }
     end
 
