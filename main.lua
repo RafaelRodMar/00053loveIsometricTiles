@@ -5,6 +5,10 @@ function love.load()
     love.window.setMode(gameWidth, gameHeight, {resizable=false, vsync=false})
     love.graphics.setBackgroundColor(1,1,1) --white
 
+    --load font
+    font = love.graphics.newFont("sansation.ttf",25)
+    love.graphics.setFont(font)
+
     -- Number of tiles in world
 	vWorldSize = { x=14, y=10 }
 
@@ -17,6 +21,8 @@ function love.load()
 	-- Sprite that holds all imagery
     imagedata = love.image.newImageData('isometric_demo.png')
 	sprIsom = love.graphics.newImage(imagedata)
+    textureWidth = imagedata:getWidth()
+    textureHeight = imagedata:getHeight()
 
 	-- table to create 2D world array
 	pWorld = {}
@@ -108,4 +114,62 @@ end
 function love.draw()
     love.graphics.setBackgroundColor(1,1,1)
     love.graphics.setColor(1,1,1)
+
+    -- Draw World
+
+    -- (0,0) is at top, defined by vOrigin, so draw from top to bottom
+    -- to ensure tiles closest to camera are drawn last
+    for y = 0, vWorldSize.y do
+        for x = 0, vWorldSize.x do
+            -- Convert cell coordinate to world space
+            vWorld = ToScreen(x, y)
+            
+            local tileValue = pWorld[y * vWorldSize.x + x]
+
+            if tileValue == 0 then
+                -- Invisible Tile
+                -- quad : where it starts into the texture, the x and y size of the quad, and the width and height of the texture.
+                quad = love.graphics.newQuad(1*vTileSize.x,0, vTileSize.x, vTileSize.y, textureWidth, textureHeight)
+                love.graphics.draw(sprIsom,quad, vWorld.x, vWorld.y)
+            elseif tileValue == 1 then
+                -- Visible Tile
+                quad = love.graphics.newQuad(2*vTileSize.x, 0, vTileSize.x, vTileSize.y, textureWidth, textureHeight)
+                love.graphics.draw(sprIsom, quad, vWorld.x, vWorld.y)
+            elseif tileValue == 2 then
+                -- Tree
+                quad = love.graphics.newQuad(0 * vTileSize.x, 1 * vTileSize.y, vTileSize.x, vTileSize.y * 2, textureWidth, textureHeight)
+                love.graphics.draw(sprIsom, quad, vWorld.x, vWorld.y - vTileSize.y)
+            elseif tileValue == 3 then
+                -- Spooky Tree
+                quad = love.graphics.newQuad(1 * vTileSize.x, 1 * vTileSize.y, vTileSize.x, vTileSize.y * 2, textureWidth, textureHeight)
+                love.graphics.draw(sprIsom, quad, vWorld.x, vWorld.y - vTileSize.y)
+            elseif tileValue == 4 then
+                -- Beach
+                quad = love.graphics.newQuad(2 * vTileSize.x, 1 * vTileSize.y, vTileSize.x, vTileSize.y * 2, textureWidth, textureHeight)
+                love.graphics.draw(sprIsom, quad, vWorld.x, vWorld.y - vTileSize.y)
+            elseif tileValue == 5 then
+                -- Water
+                quad = love.graphics.newQuad(3 * vTileSize.x, 1 * vTileSize.y, vTileSize.x, vTileSize.y * 2, textureWidth, textureHeight)
+                love.graphics.draw(sprIsom, quad, vWorld.x, vWorld.y - vTileSize.y)
+            end
+        end
+    end
+
+    -- Draw Selected Cell
+    -- Convert selected cell coordinate to world space
+    vSelectedWorld = ToScreen(vSelected.x, vSelected.y)
+
+    -- Draw "highlight" tile
+    quad = love.graphics.newQuad(0 * vTileSize.x, 0, vTileSize.x, vTileSize.y, textureWidth, textureHeight)
+    love.graphics.draw(sprIsom, quad, vSelectedWorld.x, vSelectedWorld.y)
+
+    -- Draw Hovered Cell Boundary
+    --DrawRect(vCell.x * vTileSize.x, vCell.y * vTileSize.y, vTileSize.x, vTileSize.y, olc::RED);
+            
+    -- Draw Debug Info
+    --draw UI
+    love.graphics.setColor(1,0,0)
+    love.graphics.print("Mouse: " .. vMouse.x .. "," .. vMouse.y, 4, 4)
+    love.graphics.print("Cell: " .. vCell.x .. "," .. vCell.y, 4, 24)
+    love.graphics.print("Selected: " .. vSelected.x .. "," .. vSelected.y, 4, 44)
 end
