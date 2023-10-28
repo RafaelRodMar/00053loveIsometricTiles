@@ -73,6 +73,8 @@ function love.update(dt)
     }
 
     -- "Bodge" selected cell by sampling corners
+    -- the "cheating" cell has 4 colours and if there is one of that colours
+    -- the selected cell is not the central one, but one of the surrounding ones.
     if colr == 1 and colg == 0 and colb == 0 then
         vSelected.x = vSelected.x - 1
         vSelected.y = vSelected.y + 0
@@ -122,7 +124,6 @@ function love.draw()
     for y = 1, vWorldSize.y do
         for x = 1, vWorldSize.x do
             -- Convert cell coordinate to world space
-            print("call to ToScreen with: "..x..","..y)
             vWorld = ToScreen(x, y)
             
             local tileValue = pWorld[y * vWorldSize.x + x]
@@ -164,9 +165,6 @@ function love.draw()
     quad = love.graphics.newQuad(0 * vTileSize.x, 0, vTileSize.x, vTileSize.y, textureWidth, textureHeight)
     love.graphics.draw(sprIsom, quad, vSelectedWorld.x, vSelectedWorld.y)
 
-    -- Draw Hovered Cell Boundary
-    --DrawRect(vCell.x * vTileSize.x, vCell.y * vTileSize.y, vTileSize.x, vTileSize.y, olc::RED);
-            
     -- Draw Debug Info
     --draw UI
     love.graphics.setColor(1,0,0)
