@@ -103,8 +103,8 @@ function love.update(dt)
     -- Function to convert "world" coordinate into screen space
     function ToScreen(x, y)
         return {
-            math.floor((vOrigin.x * vTileSize.x) + (x - y) * (vTileSize.x / 2)),
-            math.floor((vOrigin.y * vTileSize.y) + (x + y) * (vTileSize.y / 2))
+            x = math.floor((vOrigin.x * vTileSize.x) + (x - y) * (vTileSize.x / 2)),
+            y = math.floor((vOrigin.y * vTileSize.y) + (x + y) * (vTileSize.y / 2))
         }
     end
 
@@ -122,7 +122,7 @@ function love.draw()
     for y = 1, vWorldSize.y do
         for x = 1, vWorldSize.x do
             -- Convert cell coordinate to world space
-            print(x..","..y)
+            print("call to ToScreen with: "..x..","..y)
             vWorld = ToScreen(x, y)
             
             local tileValue = pWorld[y * vWorldSize.x + x]
