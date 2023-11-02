@@ -28,7 +28,7 @@ function love.load()
 	pWorld = {}
 
     -- Fill the empty table with vWorldSize.x * vWorldSize.y zeroes
-    for i = 1, vWorldSize.x * vWorldSize.y do
+    for i = 1, (vWorldSize.x + 1) * (vWorldSize.y + 1) do
         pWorld[i] = 1
     end
 
@@ -69,7 +69,7 @@ function love.update(dt)
     vSelected = 
     {
         x = (vCell.y - vOrigin.y) + (vCell.x - vOrigin.x),
-        y = (vCell.y - vOrigin.y) - (vCell.x - vOrigin.x) 
+        y = (vCell.y - vOrigin.y) - (vCell.x - vOrigin.x)
     }
 
     -- "Bodge" selected cell by sampling corners
@@ -95,7 +95,7 @@ function love.update(dt)
     -- Handle mouse click to toggle if a tile is visible or not
     if mouseClicked == true then
         -- Guard array boundary
-        if vSelected.x >= 0 and vSelected.x < vWorldSize.x and vSelected.y >= 0 and vSelected.y < vWorldSize.y then
+        if vSelected.x > 0 and vSelected.x <= vWorldSize.x and vSelected.y > 0 and vSelected.y <= vWorldSize.y then
             local index = vSelected.y * vWorldSize.x + vSelected.x
             index = math.floor(index)
             pWorld[index] = (pWorld[index] + 1) % 6
